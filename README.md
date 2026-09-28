@@ -107,3 +107,39 @@ predict(w1,w2,test)
 
 <H3> Result:</H3>
 Thus, XOR classification problem can be solved using MLP in Python 
+
+```
+import numpy as np
+import matplotlib.pyplot as plt
+
+X=np.array([[0,0,1,1],[0,1,0,1]])
+Y=np.array([[0,1,1,0]])
+
+np.random.seed(2)
+W1=np.random.rand(2,2)
+W2=np.random.rand(1,2)
+lr=.1
+loss=[]
+
+def sig(x):
+    return 1/(1+np.exp(-x))
+
+for i in range(10000):
+    A1=sig(W1@X)
+    A2=sig(W2@A1)
+    e=A2-Y
+
+    loss.append(-np.mean(Y*np.log(A2)+(1-Y)*np.log(1-A2)))
+
+    d2=e
+    d1=(W2.T@d2)*A1*(1-A1)
+    W2-=lr*d2@A1.T/4
+    W1-=lr*d1@X.T/4
+
+print("Output:",(A2>=.5).astype(int))
+
+plt.plot(loss)
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.show()
+```
